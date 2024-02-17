@@ -134,8 +134,7 @@ const fakeUserData = [
   },
 ];
 
-const requiredFormat = `
-{
+const requiredFormat = `{
   "user_id": "user_123", // Replace with actual user ID
   "goals": {
     "primary_goal": "<primary_goal_from_user_data>", // e.g., "weight_loss"
@@ -192,6 +191,64 @@ const requiredFormat = `
   }
 }`;
 
+// const requiredFormatObj = `
+// {
+//   "user_id": "user_123", // Replace with actual user ID
+//   "goals": {
+//     "primary_goal": "<primary_goal_from_user_data>", // e.g., "weight_loss"
+//     "secondary_goals": ["<secondary_goal_1>", "<secondary_goal_2>", ...]
+//   },
+//   "preferences": {
+//     "activity_level": "<activity_level_from_user_data>", // e.g., "moderately_active"
+//     "equipment": ["<equipment_1>", "<equipment_2>", ...], // e.g., ["dumbbells"]
+//     "diet": {
+//       "restrictions": ["<restriction_1>", "<restriction_2>", ...], // e.g., ["vegetarian"]
+//       "preferences": "<dietary_pattern_from_user_data>", // e.g., "paleo"
+//       "time_commitment": "<time_commitment_from_user_data>" // e.g., "minimal"
+//     }
+//   },
+//   "plan": {
+//     "workout_plan": {
+//       "duration": 30, // 30 days
+//       "frequency": {
+//         "cardio": "<cardio_frequency_from_prompt>", // e.g., 3 times/week
+//         "strength": "<strength_frequency_from_prompt>", // e.g., 2 times/week
+//         "rest": "<rest_days_from_prompt>" // e.g., 2 days/week
+//       },
+//       "exercises": [
+//         {
+//           "day": 1,
+//           "type": "<exercise_type_from_prompt>", // e.g., "cardio", "strength"
+//           "description": "<exercise_description_from_prompt>",
+//           "sets": "<sets_from_prompt>",
+//           "reps": "<reps_from_prompt>",
+//           "duration": "<duration_from_prompt>"
+//         },
+//         // ... more exercises for other days
+//       ]
+//     },
+//     "meal_plan": {
+//       "breakfast": [
+//         {
+//           "day": 1,
+//           "recipe": "<recipe_name_from_prompt>",
+//           "ingredients": ["<ingredient_1>", "<ingredient_2>", ...]
+//         },
+//         // ... more meals for other days and times
+//       ],
+//       "lunch": [
+//         // ... lunch meals
+//       ],
+//       "dinner": [
+//         // ... dinner meals
+//       ],
+//       "snacks": [
+//         // ... optional snacks
+//       ]
+//     }
+//   }
+// };
+
 const generatePlan = async (req, res, next) => {
   req.setTimeout(5000000);
 
@@ -226,11 +283,7 @@ const generatePlan = async (req, res, next) => {
     // console.log(completion.choices[0].message.content);
     const parts = completion.choices[0].message.content.split("\\");
     const output = parts.join("\\\\");
-    // console.log(output);
 
-    // const cleanedJson = .replaceAll(`\`, `\\`);
-    // const cleanedJson = completion.choices[0].message.content.replaceAll("\n", "").replaceAll(`\"`, `"`);
-    // console.log(cleanedJson);
     const cleanedObj = JSON.parse(output);
 
     return successResponse(res, {
@@ -244,6 +297,160 @@ const generatePlan = async (req, res, next) => {
   }
 };
 
+const generatePlanFake = async (req, res, next) => {
+  req.setTimeout(5000000);
+
+  try {
+    const payload = {
+      user_id: "user_123",
+      goals: {
+        primary_goal: "Build muscle",
+        secondary_goals: ["Burn fat", "Improve cardiovascular health"],
+      },
+      preferences: {
+        activity_level: "Intermediate",
+        equipment: ["Dumbbells", "Treadmill", "Resistance bands"],
+        diet: {
+          restrictions: ["Dairy-free", "Nut allergies"],
+          preferences: "No",
+          time_commitment: "Minimal time, prefer quick and easy meals",
+        },
+      },
+      plan: {
+        workout_plan: {
+          duration: 30,
+          frequency: {
+            cardio: "3 times/week",
+            strength: "4 times/week",
+            rest: "2 days/week",
+          },
+          exercises: [
+            {
+              day: 1,
+              type: "cardio",
+              description: "Treadmill running",
+              sets: "N/A",
+              reps: "N/A",
+              duration: "20 minutes",
+            },
+            {
+              day: 2,
+              type: "strength",
+              description: "Dumbbell chest press",
+              sets: "3 sets",
+              reps: "8-12 reps",
+              duration: "N/A",
+            },
+            {
+              day: 2,
+              type: "strength",
+              description: "Plank",
+              sets: "3 sets",
+              reps: "Hold for 1 minute",
+              duration: "N/A",
+            },
+            {
+              day: 3,
+              type: "rest",
+              description: "Rest day",
+              sets: "N/A",
+              reps: "N/A",
+              duration: "N/A",
+            },
+            {
+              day: 4,
+              type: "cardio",
+              description: "Stationary bike cycling",
+              sets: "N/A",
+              reps: "N/A",
+              duration: "30 minutes",
+            },
+            {
+              day: 5,
+              type: "strength",
+              description: "Squats",
+              sets: "3 sets",
+              reps: "10-15 reps",
+              duration: "N/A",
+            },
+            {
+              day: 5,
+              type: "strength",
+              description: "Pull-ups",
+              sets: "3 sets",
+              reps: "5-8 reps",
+              duration: "N/A",
+            },
+            {
+              day: 6,
+              type: "rest",
+              description: "Rest day",
+              sets: "N/A",
+              reps: "N/A",
+              duration: "N/A",
+            },
+            {
+              day: 7,
+              type: "strength",
+              description: "Deadlifts",
+              sets: "3 sets",
+              reps: "8-12 reps",
+              duration: "N/A",
+            },
+            {
+              day: 7,
+              type: "strength",
+              description: "Dumbbell shoulder press",
+              sets: "3 sets",
+              reps: "8-12 reps",
+              duration: "N/A",
+            },
+          ],
+        },
+        meal_plan: {
+          breakfast: [
+            {
+              day: 1,
+              recipe: "Avocado toast on gluten-free bread with a side of berries",
+              ingredients: ["Avocado", "Gluten-free bread", "Mixed berries"],
+            },
+          ],
+          lunch: [
+            {
+              day: 1,
+              recipe: "Mixed salad with grilled chicken breast",
+              ingredients: ["Mixed greens", "Grilled chicken breast", "Olive oil", "Lemon juice"],
+            },
+          ],
+          dinner: [
+            {
+              day: 1,
+              recipe: "Baked salmon with steamed broccoli and quinoa",
+              ingredients: ["Salmon", "Broccoli", "Quinoa"],
+            },
+          ],
+          snacks: [
+            {
+              day: 1,
+              recipe: "Carrot sticks and hummus",
+              ingredients: ["Carrot sticks", "Hummus"],
+            },
+          ],
+        },
+      },
+    };
+    return successResponse(res, {
+      statusCode: 200,
+      message: "Plan created successfully",
+      payload: { plan: payload },
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 module.exports = {
   generatePlan,
+  generatePlanFake,
 };
