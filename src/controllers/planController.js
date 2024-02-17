@@ -191,64 +191,6 @@ const requiredFormat = `{
   }
 }`;
 
-// const requiredFormatObj = `
-// {
-//   "user_id": "user_123", // Replace with actual user ID
-//   "goals": {
-//     "primary_goal": "<primary_goal_from_user_data>", // e.g., "weight_loss"
-//     "secondary_goals": ["<secondary_goal_1>", "<secondary_goal_2>", ...]
-//   },
-//   "preferences": {
-//     "activity_level": "<activity_level_from_user_data>", // e.g., "moderately_active"
-//     "equipment": ["<equipment_1>", "<equipment_2>", ...], // e.g., ["dumbbells"]
-//     "diet": {
-//       "restrictions": ["<restriction_1>", "<restriction_2>", ...], // e.g., ["vegetarian"]
-//       "preferences": "<dietary_pattern_from_user_data>", // e.g., "paleo"
-//       "time_commitment": "<time_commitment_from_user_data>" // e.g., "minimal"
-//     }
-//   },
-//   "plan": {
-//     "workout_plan": {
-//       "duration": 30, // 30 days
-//       "frequency": {
-//         "cardio": "<cardio_frequency_from_prompt>", // e.g., 3 times/week
-//         "strength": "<strength_frequency_from_prompt>", // e.g., 2 times/week
-//         "rest": "<rest_days_from_prompt>" // e.g., 2 days/week
-//       },
-//       "exercises": [
-//         {
-//           "day": 1,
-//           "type": "<exercise_type_from_prompt>", // e.g., "cardio", "strength"
-//           "description": "<exercise_description_from_prompt>",
-//           "sets": "<sets_from_prompt>",
-//           "reps": "<reps_from_prompt>",
-//           "duration": "<duration_from_prompt>"
-//         },
-//         // ... more exercises for other days
-//       ]
-//     },
-//     "meal_plan": {
-//       "breakfast": [
-//         {
-//           "day": 1,
-//           "recipe": "<recipe_name_from_prompt>",
-//           "ingredients": ["<ingredient_1>", "<ingredient_2>", ...]
-//         },
-//         // ... more meals for other days and times
-//       ],
-//       "lunch": [
-//         // ... lunch meals
-//       ],
-//       "dinner": [
-//         // ... dinner meals
-//       ],
-//       "snacks": [
-//         // ... optional snacks
-//       ]
-//     }
-//   }
-// };
-
 const generatePlan = async (req, res, next) => {
   req.setTimeout(5000000);
 
@@ -261,7 +203,7 @@ const generatePlan = async (req, res, next) => {
     }
 
     const userData = req.body.preference;
-    console.log(userData);
+    console.log(JSON.stringify(requiredFormatObj));
 
     const prompt = `
     **User Data:**
@@ -270,7 +212,8 @@ const generatePlan = async (req, res, next) => {
     Prompt:
     This user (defined in the JSON above) is looking for 30 day workout plan and meal plan. All of his requirement is mentioned.
 
-    Generate a 30-day workout plan and meal plan for this user, adhering to the following format (no code blocks markers should exist in the response, also no whitespace, comments in json, just plain json without any formatting):
+    Generate a 30-day workout plan and meal plan for this user, adhering to the following format. You must give 30 days plans. 
+    Remember, no code blocks markers should exist in the response. Please omit all comments in json in your response, just plain json without any formatting):
     Output Format:
     ${requiredFormat}
     `;
@@ -278,13 +221,14 @@ const generatePlan = async (req, res, next) => {
     const completion = await openai.chat.completions.create({
       messages: [{ role: "system", content: prompt }],
       model: "gpt-4-0125-preview",
+      response_format: { type: "json_object" },
     });
 
-    // console.log(completion.choices[0].message.content);
-    const parts = completion.choices[0].message.content.split("\\");
-    const output = parts.join("\\\\");
+    console.log(completion.choices[0].message.content);
+    // const parts = completion.choices[0].message.content.split("\\");
+    // const output = parts.join("\\\\");
 
-    const cleanedObj = JSON.parse(output);
+    const cleanedObj = JSON.parse(completion.choices[0].message.content);
 
     return successResponse(res, {
       statusCode: 200,
