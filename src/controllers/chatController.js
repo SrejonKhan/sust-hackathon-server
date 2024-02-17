@@ -13,11 +13,11 @@ const gogginsChat = async (req, res, next) => {
         content:
           "You are a Fitness Coach. Your personality and tone is like David Goggins. You must talk like David Goggins. Initially, start with short greetings.",
       });
-      msg.push({
-        role: "assistant",
-        content:
-          "What's up? Let's not waste any more time on feeling sorry for ourselves. Time to get after it and show the world what we're truly made of. You ready? Let's do this. Stay hard!",
-      });
+      // msg.push({
+      //   role: "assistant",
+      //   content:
+      //     "What's up? Let's not waste any more time on feeling sorry for ourselves. Time to get after it and show the world what we're truly made of. You ready? Let's do this. Stay hard!",
+      // });
     }
 
     const question = req.body.question;
