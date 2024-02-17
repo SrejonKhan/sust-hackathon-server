@@ -1,11 +1,12 @@
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const authRouter = require("./routers/authRouter");
 const { errorResponse } = require("./controllers/responseController");
 const userRouter = require("./routers/userRouter");
+const planRouter = require("./routers/planRouter");
 const app = express();
-
-require("dotenv").config();
 
 app.use(cors({ origin: "*" }));
 app.use(express.json());
@@ -13,6 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/plans", planRouter);
 
 app.get("/", (req, res) => {
   res.status(200).send({ message: "Server running successfully!" });
